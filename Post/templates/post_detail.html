@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+<!-- List of blogs -->
+
+<div class="row  mt-2 bg-light py-2">
+    <div class="col-md-7 col-sm-12 container">
+        <div class="header" >
+            <a href="{% url 'post-detail' post.pk %}" class="h4">{{ post.title }}</a><br>
+            <div style=" height:18vh; background-image: url('/media/{{post.cover_photo}}'); background-repeat: no-repeat;">
+                
+            </div>
+            <small>{{ post.created_on|naturalday }} {{ post.author.username}}</small>
+
+            {% if user.is_superuser %}
+            <a href="{% url 'post-update' post.pk %}" class="btn btn-sm btn-success"><i class="fa fa-pen mr-1"></i>Edit</a>
+            <a href="{% url 'post-delete' post.pk %}" class="btn btn-sm btn-danger"><i class="fa fa-trash mr-1"></i>Delete</a>
+
+            {% endif %}
+        </div>
+       
+        <div class="text-left">
+            <p>
+                {{post.format_content|safe}}
+                <!-- | -->
+            </p>
+           
+        </div>
+
+        <div class="row navigate-post">
+            <!-- Links to Next and previous post -->
+            <div class="col-md-4 col-sm-4">
+                {% for prev in previous %}
+                    <a href="{% url 'post-detail' prev.pk %}"> <<< Previous  <br> {{prev.title}}</a>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 offset-4 col-sm-4">
+                {% for next in nexts %}
+                    <a href="{% url 'post-detail' next.pk %}"> Next >>> <br> {{next.title}}</a>
+                {% endfor %}    
+            </div>
+        </div>
+        <div class="container-fluid mt-5 bg-white">
+            <!-- Comment Section -->
+            <h4>Comment Section</h4>
+                <form action="." method="POST" class="form-horizontal" id="reply-form">
+                    {% csrf_token %}
+                    <div id="div_id_reply_body" class="control-group">
+                        <label for="id_name" class="control-label requiredField">
+                            Name<span class="asteriskField">*</span> </label>
+                        <input type="text" name="name" id="id_name" class="form-control" required>
+                        <input type="text" name="post" id="id_post" value="{{ post.pk }}" hidden>
+                        <label for="id_reply_body" class="control-label requiredField">
+                            Reply body<span class="asteriskField">*</span> </label>
+                        <div class="controls">
+                            <textarea name="reply_body" cols="50" rows="8" class="textarea form-control" required id="id_reply_body">
+                            </textarea>
+                        </div>
+                    </div>
+                    <input type="submit" name="Login" class="form-control mt-2 btn-success">
+                </form>
+            <div class="comment mt-5" id="comment">
+               
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h6>Related Post</h6>
+        <div class="list-group text-black" role="group">
+            {% for relate in related %}
+                <a href="{% url 'post-detail' post.pk %}" class="list-group-item "> {{relate.title}} {{ relate.created_on|date:'M Y'}}</a>
+            {% endfor %}
+        </div>  
+    </div>
+    <div class="footer-share justify-content-center">
+        <!--  Count the number of shares -->
+        <!-- Click events: autoupdate the post -->
+        <!-- <div class="btn-group">
+            <a href="www.twitter.com" class="btn btn-md btn-info"><i class="fa fa-twitter" aria-hidden="true"></i>Twitter</a>
+            <a href="www.facebook.com"class="btn btn-md btn-info" ><i class="fa fa-facebook" aria-hidden="true"></i>Facebook</a>
+            <a href="www.googleplus.com"class="btn btn-md btn-info"><i class="fa fa-google-plus" aria-hidden="true"></i>Google+</a>
+            <a href="www.pintinterest.com"class="btn btn-md btn-info"><i class="fa fa-pinterest" aria-hidden="true"></i>PintInterest</a>
+        </div> -->
+        
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(function () {
+        $('#reply-form').on('submit', e => {
+            e.preventDefault()
+            let data = $('#reply-form').serialize();
+            data.concat('&csrfmiddlewaretoken={{ csrf_token }}');
+            getAndRender(data, 'POST');
+           
+        });
+
+        function getAndRender(data =$('#reply-form').serialize(),method='GET'){
+             $.ajax({
+                url: "{% url 'reply-form' %}",
+                type: method,
+                data: data,
+                success: function (response) {
+                    // Update the reply section
+                    $('#comment').html('');
+                    for (let resp of JSON.parse(response)) {
+                        var date = new Date(resp.fields.reply_at);
+                        $('#comment').append(
+                            `<p><strong  class="mr-2">${resp.fields.name}</strong> <small class="text-italic">${date.toDateString().split('G')}</small></p >
+                         <p>${resp.fields.reply_body}</p>`);
+                    }
+
+                    $('.textarea').val('');
+
+                },
+                error: function () {
+                    // Notify the user of the errors
+                    alert("The comment was not posted");
+                }
+            })
+        }
+
+        getAndRender();
+
+        // Add a class to images created by markdown editor
+        var images = $('p').siblings('img');
+        console.log(images);
+
+        for(let image of images){
+            image.addClass('img-thumbnail');
+        }
+    });
+</script>
+{% endblock %}

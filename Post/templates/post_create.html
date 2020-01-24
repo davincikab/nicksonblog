@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid bg-light">
+    <form class="form-horizontal row py-5" method="POST" action="" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="bg-white col-md-12 col-sm-12 col-xs-12 container">
+            <p class="border-bottom text-center"><strong>{{ form.title.value|yesno:"Update Post,no,Create Post" }}</strong></p>
+            <div class="row">
+                <div class="col-md-5 col-sm-12 col-xs-12">
+                    <div class="input-group">
+                        {{ form.title|as_crispy_field}}
+                    </div>
+                    
+                    <div class="input-group">
+                        {{ form.genre|as_crispy_field }}
+                    </div>
+                    <div class="input-group">
+                        {{ form.author|as_crispy_field }}
+                    </div>
+                    <!-- </div> -->
+                    <div class="input-group">
+                        {{ form.cover_photo|as_crispy_field }}
+                    </div>
+                    <div class="input-group">
+                        {{ form.published|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="col-md-7 col-sm-12 col-xs-12">
+                    <div class="input-group">
+                        {{ form.content|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            
+            
+            <input type="submit" class="btn btn-success mb-2 form-control" name="Update">
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}
+{% block javascript %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+    <script>
+        var simpleMDE = new SimpleMDE({element: document.getElementById('id_content')});
+    </script>
+{% endblock %}

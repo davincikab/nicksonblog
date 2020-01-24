@@ -1,0 +1,12 @@
+<!-- Modal to confirm the delete -->
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-3">
+        <p >Confirm you want to delete this blog: <strong>{{post.title}}</strong> </p>
+        <form action="{% url 'post-delete' post.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" name="" id="" class="btn btn-danger" value="Delete">
+            <a href="{% url 'post-detail' post.pk %}" class="btn btn-info">Cancel</a>
+        </form>       
+    </div>
+{% endblock %}

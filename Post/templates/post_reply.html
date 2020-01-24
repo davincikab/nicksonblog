@@ -1,0 +1,39 @@
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block content %}
+<div class="container mt-5 bg-light ">
+    <div class=" col-md-6">
+        <form action="{% url 'reply-form' %}" method="POST" class="form-horizontal" id="reply-form">
+            {% csrf_token %}
+            <div id="div_id_reply_body" class="control-group"> 
+                <label for="id_reply_body" class="control-label requiredField">
+                    Reply body<span class="asteriskField">*</span> </label>
+                <div class="controls"> 
+                    <textarea name="reply_body" cols="50" rows="8" class="textarea" required id="id_reply_body">
+                    </textarea> 
+                </div>
+            </div>
+            <input type="submit" name="Login" class="form-control mt-2">
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        $(function(){
+            $('#reply-form').on('submit', e =>{
+                e.preventDefault()
+                $.ajax({
+                    url:'',
+                    data:'',
+                    success:function (response){
+
+                    },
+                    error: function(){
+
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}

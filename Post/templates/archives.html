@@ -1,0 +1,11 @@
+<div class="col-md-4">
+    <h6>Archived Post</h6>
+    <div class="list-group text-black" role="group">
+        {% for datum in data %}
+        <a href="{% url 'post-detail' datum.pk %}" class="list-group-item "> {{datum.title}}
+            {{ datum.created_on}}</a>
+
+        {% endfor %}
+    </div>
+
+</div>

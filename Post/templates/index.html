@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+    <!-- List of blogs -->
+    <div class="container-fluid mt-2 bg-light py-2">
+        <div class="row">
+            <div class="col-md-7 col-xs-12 col-sm-12 container">
+                {% for post in posts %}
+                    <div class="row mb-5"> 
+                        <div class="col-md-12 col-sm-12 bg-white pb-2">
+                           <a href="{% url 'post-detail' post.pk %}" class="h4">{{ post.title }}</a><br>
+                           <small>{{ post.created_on|naturalday }} {{ post.author.username}}</small>
+                           <div class="text-left">
+                               <p class="card">
+                                 {{post.truncate_content|safe}}
+                                 <!-- | -->
+                               </p>
+                               <a  class="btn btn-outline-info" href="{% url 'post-detail' post.pk %}">Continue Reading</a>
+                           </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                <div class="pagination"> 
+                    <span class="step-links"> 
+                        {% if  page_obj.has_previous %} 
+                            <!-- <a href="?page=1">&laquo; first</a>  -->
+                            <a href="?page={{  page_obj.previous_page_number }}" class="mr-2">previous</a> 
+                        {% endif %}
+                        <span class="current ml-5 "> 
+                            Page {{  page_obj.number }} of {{  page_obj.paginator.num_pages }}. 
+                        </span>
+                        {% if  page_obj.has_next %} 
+                            <a href="?page={{  page_obj.next_page_number }}" class="ml-5">next</a> 
+                            <!-- <a href="?page={{  page_obj.paginator.num_pages }}">last &raquo;</a>  -->
+                        {% endif %} 
+                    </span> 
+                </div>
+
+            </div>
+           
+            <div class="col-md-4 col-xs-12">
+                <h6>Archived Post</h6>
+                <div class="list-group text-black" role="group">
+                    {% for datum in archives %}
+                        <a href="{% url 'post-detail' datum.pk %}" class="list-group-item ">
+                        <small class="ml-2 h6">{{ datum.created_on|date:'M Y'}}</small></a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
