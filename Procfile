@@ -1,2 +1,2 @@
-web: gunicorn LakeView.wsgi --log-file -
+web: gunicorn blog.wsgi --log-file -
 release: python manage.py migrate
