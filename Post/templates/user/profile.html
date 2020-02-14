@@ -2,7 +2,7 @@
 {% load humanize %}
 {% block content %}
 <div class="container">
-    <div class="col-md-8 mt-5">
+    <div class="col-md-8 col-sm-12 mt-5">
        <div class="card">
            <div class="card-header">
             <div class="card-img-top">
@@ -11,9 +11,10 @@
            </div>
            <div class="card-body">
                 <p>{{data.description}}</p>
-                <p>Email: {{data.user.email}}</p>
-                <p>First Name:{{data.user.first_name}}</p>
-                <p> Last Name: {{data.user.last_name}}</p>
+           </div>
+           <div class="card-footer justify-content-between">
+              <i class="mr-5">{{data.user.email}} </i>
+              <i class="ml-5">{{data.user.first_name}} {{data.user.last_name}}</i>
            </div>
        </div>
     </div>

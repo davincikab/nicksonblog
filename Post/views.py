@@ -53,7 +53,10 @@ class PostDetailView(DetailView):
 
         context['nexts'] = Post.objects.filter(pk = self.object.pk+1)
         context['previous'] = Post.objects.filter(pk=self.object.pk-1)
-        context['related'] = Post.objects.exclude(pk=self.object.pk).filter(genre__icontains=subject[0].genre)
+        context['related'] = Post.objects.exclude(pk=self.object.pk)\
+                                    .filter(genre__icontains=subject[0].genre)\
+                                    .filter(published=True)
+    
         return context
     
     def get_queryset(self):

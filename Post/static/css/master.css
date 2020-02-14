@@ -18,15 +18,20 @@ html, body{
 }
 
 .footer-share{
-    position: fixed;
-    bottom: 0%;
+    position:fixed;
+    bottom: 40%;
+    left:0%;
     height: auto;
+    float:right;
     overflow: hidden;
+    margin-left: 2px;
 }
 
 .footer-share .btn{
-    border-radius: 0px;
-    border-left:0.6px solid black;
+    border-radius: 50%;
+    display: block;
+    margin-top: 3px;
+    /* border-left:0.6px solid black; */
 }
 
 #id_password, control-{
